@@ -34,36 +34,71 @@ public class SchedulingSchemes {
 
     // First-Come First-Served
     public static Process fcfs(LinkedList<Process> queue) {
-        Process pNext = new Process();
 
-        // add your code here
-
-        return pNext;
+        if (queue.isEmpty()) {
+            return null;
+        }
+        return queue.getFirst();
     }
 
     // Shortest Job Next
     public static Process sjn(LinkedList<Process> queue) {
-        Process pNext = new Process();
 
-        // add your code here
+        if (queue.isEmpty()) {
+            return null;
+        }
+        Process pNext = queue.getFirst();
+
+        for (Process p : queue) {
+            if (p.burstTime < pNext.burstTime) {
+                pNext = p;
+            }
+            else if (p.burstTime == pNext.burstTime) {
+                if (p.arrivalTime < pNext.arrivalTime) {
+                    pNext = p;
+                }
+            }
+
+        }
 
         return pNext;
     }
 
     // Shortest Remaining Time
     public static Process srt(LinkedList<Process> queue) {
-        Process pNext = new Process();
 
-        // add your code here
+        if (queue.isEmpty()) {
+            return null;
+        }
+        Process pNext = queue.getFirst();
 
+        int shortestRemainingTime = pNext.burstTime - pNext.getTimeInService();
+
+        for (Process p : queue) {
+            int remainingTime = p.burstTime - p.getTimeInService();
+            if (remainingTime < shortestRemainingTime) {
+                shortestRemainingTime = remainingTime;
+                pNext = p;
+            }
+            else if (remainingTime == shortestRemainingTime) {
+                if (p.getArrivalTime() < pNext.getArrivalTime()) {
+                    shortestRemainingTime = p.burstTime - p.getTimeInService();
+                    pNext = p;
+                }
+            }
+        }
         return pNext;
     }
 
     // Round Robin
     public static Process rr(LinkedList<Process> queue) {
-        Process pNext = new Process();
+        if (queue.isEmpty()) {
+            return null;
+        }
 
-        // add your code here
+        Process pNext = queue.removeFirst();
+
+        queue.addLast(pNext);
 
         return pNext;
     }
@@ -73,9 +108,26 @@ public class SchedulingSchemes {
      */
     // Priority Scheduling
     public static Process ps(LinkedList<Process> queue) {
-        Process pNext = new Process();
+        if (queue.isEmpty()) {
+            return null;
+        }
 
-        // add your code here
+        Process pNext = queue.getFirst();
+        int bestPriority = pNext.getPriority();
+
+        for (Process p : queue) {
+            int currentPariority = p.getPriority();
+
+            if (currentPariority < bestPriority) {
+                bestPriority = currentPariority;
+                pNext = p;
+            }
+            else if (currentPariority == bestPriority) {
+                if (p.getArrivalTime() < pNext.getArrivalTime()) {
+                    pNext = p;
+                }
+            }
+        }
 
         return pNext;
     }
