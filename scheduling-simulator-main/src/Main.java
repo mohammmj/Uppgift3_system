@@ -62,11 +62,11 @@ public class Main {
         //run(srt_ex1, srt1);
         //run(srt_wikipedia, srtWikipedia);
 
-        run(rr_ex1, rr1);
+        //run(rr_ex1, rr1);
         //run(rr_ex2, rr2);
         //run(rr_wikipedia, rrWikipedia);
 
-        //run(ps_ex1, ps1);
+        run(ps_ex1, ps1);
 
         //run(processes, processes_ex);
 
@@ -140,10 +140,15 @@ public class Main {
              */
 
             if (scheme.name.equals("RR")) {
-                // Round Robin logic (unchanged)
+
                 if (currentProcess == null || quantumUsed >= quantum || currentProcess.getTimeInService() >= currentProcess.burstTime) {
                     if (!queue.isEmpty()) {
                         pNext = schedulingScheme.apply(queue);
+
+                        if (currentProcess != null && currentProcess.getTimeInService() < currentProcess.burstTime) {
+                            queue.remove(currentProcess);
+                            queue.addLast(currentProcess);
+                        }
                         quantumUsed = 0;
                         currentProcess = pNext;
                     } else {
@@ -154,11 +159,9 @@ public class Main {
                     pNext = currentProcess;
                 }
             } else if (scheme.preemptive) {
-                // Preemptive algorithms (SRT) - re-evaluate every time step
                 pNext = schedulingScheme.apply(queue);
                 currentProcess = pNext;
             } else {
-                // Non-preemptive algorithms (FCFS, SJN, PS) - only select when no current process
                 if (currentProcess == null || currentProcess.getTimeInService() >= currentProcess.burstTime) {
                     pNext = schedulingScheme.apply(queue);
                     currentProcess = pNext;

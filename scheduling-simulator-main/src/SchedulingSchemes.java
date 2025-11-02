@@ -53,12 +53,9 @@ public class SchedulingSchemes {
             if (p.burstTime < pNext.burstTime) {
                 pNext = p;
             }
-            else if (p.burstTime == pNext.burstTime) {
-                if (p.arrivalTime < pNext.arrivalTime) {
-                    pNext = p;
-                }
+            else if (p.burstTime == pNext.burstTime && p.arrivalTime < pNext.arrivalTime) {
+                pNext = p;
             }
-
         }
 
         return pNext;
@@ -96,11 +93,7 @@ public class SchedulingSchemes {
             return null;
         }
 
-        Process pNext = queue.removeFirst();
-
-        queue.addLast(pNext);
-
-        return pNext;
+        return queue.getFirst();
     }
 
     /** To do for VG:
